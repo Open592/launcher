@@ -24,15 +24,23 @@ make
 
 ## Launcher arguments
 
-To allow for dynamically specifying the operator and game name, the launcher
-requires two arguments to be passed when executing:
-- [0] :: Operator Name :: Name of the game operator (Ex: jagex)
-- [1] :: Game Name :: Name of the game (Ex: runescape)
+The launcher only takes a single argument specifying the final location of the
+`.prm` file. In the original code this was specified as a `game` argument, and
+most likely supported launching their seperate games.
+
+In Open592 we do not support multiple games, so this parameter is used purely
+to support pointing to multiple seperate `.prm` files.
 
 ### Example:
 
 ```bash
-./bin/launcher jagex runescape
+# Using Linux platform as an example
+
+# ~/.config/open592/game.prm
+./bin/launcher game
+
+# ~/.config/open592/game-test.prm
+./bin/launcher game-test
 ```
 
 ## `runescape.prm`
@@ -47,26 +55,40 @@ named `runescape` which lived one directory above where the resulting executable
 was placed.
 
 ```bash
-# Example of original location of exe/.prm
+# Original location of .exe
 C:\Users\<USER_NAME>\AppData\Local\jagexlauncher\bin\JagexLauncher.exe
+
+# Original location of .prm
 C:\Users\<USER_NAME>\AppData\Local\jagexlauncher\runescape\runescape.prm
 ```
 
 ### Location
 
-For Open592 the location of the `.prm` file depends on a few things:
-- The dynamic operator and game name
-- The platform we are running on
-
-For our supported platform these will be the locations of the `.prm` file
-(taking into account dynamic operator and game names)
+#### Windows
 
 ```bash
-# Windows
-C:\Users\<USER_NAME>\AppData\Local\<OPERATOR_NAME>launcher\config\<GAME_NAME>.prm
+%LOCALAPPDATA%\open592\config\<PROFILE>.prm
+```
 
-# Linux/OSX
-~/.config/<OPERATOR_NAME>launcher/<GAME_NAME>.prm
+#### OSX
+
+```bash
+~/Library/Application Support/open592/config/<PROFILE>.prm
+```
+
+#### Linux
+
+For linux the final location of the configuration directory takes into account
+a few user configurable environment variables.
+
+If the user has specified `$XDG_CONFIG_HOME`
+```bash
+$XDG_CONFIG_HOME/open592/<PROFILE>.prm
+```
+
+If the user has not specified `$XDG_CONFIG_HOME`
+```bash
+$HOME/.config/open592/<PROFILE>.prm
 ```
 
 ## Setting up your editor
