@@ -19,10 +19,12 @@ any modern browsers makes this project nessessary.
 
 ### Arguments
 
-The launcher only takes a single string argument which specifies which game is
-being loaded. Within the code the only difference is the directory and filename
-with which the launcher finds the `.prm` file. This in effect changes the
-class-path and class which is loaded by the JVM.
+The launcher only takes a single argument specifying the final location of the
+`.prm` file. In the original code this was specified as a `game` argument, and
+most likely supported launching their seperate games.
+
+In Open592 we do not support multiple games, so this parameter is used purely
+to support pointing to multiple seperate `.prm` files.
 
 ### Launcher
 
