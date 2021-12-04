@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 #include <cassert>
 #include <fmt/core.h>
 #include <memory>
@@ -5,6 +7,17 @@
 
 #include "Launcher.hpp"
 
+/**
+ * Initialize the Launcher from command line arguments
+ *
+ * We expect a single argument to be passed which represents the
+ * "profile". We use this profile to initialize the `.prm` file which includes
+ * information to be passed to the JVM
+ *
+ * @param argc
+ * @param argv
+ * @return An instance of Launcher instantiated with the provided profile
+ */
 std::unique_ptr<Launcher> Launcher::init(int argc, char** argv)
 {
     if (argc != 2) {

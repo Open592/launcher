@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: BSD-2-Clause
+
 add_compile_options(
     -march=native
     -Wall
