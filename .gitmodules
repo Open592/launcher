@@ -1,0 +1,3 @@
+[submodule "vendor/jre"]
+	path = vendor/jre
+	url = git@github.com:Open592/jre.git
