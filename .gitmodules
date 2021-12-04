@@ -1,3 +1,6 @@
 [submodule "vendor/jre"]
 	path = vendor/jre
 	url = git@github.com:Open592/jre.git
+[submodule "vendor/fmt"]
+	path = vendor/fmt
+	url = git@github.com:fmtlib/fmt.git
