@@ -20,6 +20,7 @@ set(CMAKE_CSXX_EXTENSIONS OFF)
 
 add_executable(launcher
     main.cpp
+    Launcher.cpp
 )
 
 if (UNIX)
@@ -38,6 +39,6 @@ set_target_properties(launcher
 include(Open592FindJNI)
 
 target_include_directories(launcher PRIVATE ${JNI_INCLUDE_DIRS})
-target_link_libraries(launcher PRIVATE ${JNI_LIBRARIES})
+target_link_libraries(launcher PRIVATE ${JNI_LIBRARIES} fmt)
 
 install(TARGETS launcher RUNTIME DESTINATION ${PROJECT_BINARY_DIRECTORY})

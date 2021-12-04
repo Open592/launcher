@@ -1,8 +1,17 @@
 #include <iostream>
+#include <memory>
 
-int main()
+#include "Launcher.hpp"
+
+int main(int argc, char** argv)
 {
-    std::cout << "Hello world" << '\n';
+    try {
+        std::unique_ptr<Launcher> launcher = Launcher::init(argc, argv);
+    } catch (const std::invalid_argument& err) {
+        std::cout << err.what() << '\n';
+
+        return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }
