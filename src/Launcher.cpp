@@ -2,9 +2,11 @@
 
 #include <cassert>
 #include <fmt/core.h>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 
+#include "FileSystemUtils.hpp"
 #include "Launcher.hpp"
 
 /**
@@ -41,4 +43,28 @@ Launcher::Launcher(std::string profile)
 void Launcher::loadParameterFile()
 {
     assert(!m_profile.empty());
+
+    fs::path configDirectory = Utilities::getProjectConfigurationDirectory();
+
+    if (configDirectory.empty()) {
+        throw std::runtime_error("Failed to find configuration directory");
+    }
+
+    std::string parameterFileName = this->m_profile + ".prm";
+    fs::path parameterFilePath = configDirectory / parameterFileName;
+
+    if (!std::filesystem::exists(parameterFilePath)) {
+        throw std::runtime_error("Failed to open parameter file");
+    }
+
+    if (!std::filesystem::is_regular_file(parameterFilePath)) {
+        throw std::runtime_error("Found invalid parameter file");
+    }
+
+    this->readParameterFile(parameterFilePath);
+}
+
+void Launcher::readParameterFile(const fs::path& path)
+{
+    std::cout << path << '\n';
 }

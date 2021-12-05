@@ -16,17 +16,16 @@ add_compile_options(
     "$<$<CONFIG:RELEASE>:-O3>"
 )
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED OFF)
-set(CMAKE_CSXX_EXTENSIONS OFF)
-
 add_executable(launcher
     main.cpp
     Launcher.cpp
 )
 
-if (UNIX)
-    message(STATUS "UNIX")
+if (UNIX AND NOT APPLE)
+    target_sources(launcher
+        PRIVATE
+        platform/linux/FileSystemUtils.cpp
+    )
 else()
     message(FATAL_ERROR "At this time only unix like systems are supported.")
 endif()
