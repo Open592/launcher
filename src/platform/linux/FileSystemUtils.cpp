@@ -17,15 +17,15 @@ namespace Utilities {
  */
 fs::path findConfigurationDirectory()
 {
-    std::string userConfig = std::getenv("XDG_CONFIG_HOME");
+    const char* userConfig = std::getenv("XDG_CONFIG_HOME");
 
-    if (!userConfig.empty()) {
-        return userConfig;
+    if (userConfig != nullptr) {
+        return fs::path(userConfig);
     }
 
-    std::string home = std::getenv("HOME");
+    const char* home = std::getenv("HOME");
 
-    if (!home.empty()) {
+    if (home != nullptr) {
         return fs::path(home) / ".config";
     }
 
