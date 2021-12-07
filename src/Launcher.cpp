@@ -6,6 +6,7 @@
 #include <memory>
 #include <stdexcept>
 
+#include "AppletViewerLoader.hpp"
 #include "FileSystemUtils.hpp"
 #include "Launcher.hpp"
 
@@ -38,6 +39,15 @@ std::unique_ptr<Launcher> Launcher::init(int argc, char** argv)
 Launcher::Launcher(std::string profile)
     : m_profile(profile)
 {
+}
+
+/**
+ * Handle initialzing the JVM and loading the Applet Viewer
+ *
+ */
+void Launcher::loadAppletViewer()
+{
+    m_appletViewerLoader = std::make_unique<AppletViewerLoader>(m_parameters);
 }
 
 /**

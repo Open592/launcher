@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include "AppletViewerLoader.hpp"
+
 namespace fs = std::filesystem;
 
 class Launcher {
@@ -18,11 +20,13 @@ public:
     const std::vector<std::string>& getParameters() const noexcept { return m_parameters; };
     std::string getProfile() const noexcept { return m_profile; }
 
+    void loadAppletViewer();
     void loadParametersFromFile();
 
 private:
     void readParameterFile(const fs::path&);
 
+    std::unique_ptr<AppletViewerLoader> m_appletViewerLoader;
     std::vector<std::string> m_parameters;
     std::string m_profile;
 };

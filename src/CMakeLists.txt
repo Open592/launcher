@@ -19,6 +19,7 @@ add_compile_options(
 add_executable(launcher
     main.cpp
     Launcher.cpp
+    AppletViewerLoader.cpp
 )
 
 if (UNIX AND NOT APPLE)
