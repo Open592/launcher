@@ -40,7 +40,7 @@ else()
         PATHS
         ${JAVA_INCLUDE_PATH}
         ${JAVA_INCLUDE_PATH}/linux
-        ${JAVA_INCLUDE_PATH}/osx
+        ${JAVA_INCLUDE_PATH}/darwin
         ${JAVA_INCLUDE_PATH}/windows
         REQUIRED
     )
