@@ -29,7 +29,7 @@ to support pointing to multiple seperate `.prm` files.
 ### Launcher
 
 The launcher was a very simple C++ based program which originally only ran on
-Windows. All it did was 5 things:
+Windows. All it originally did was:
   - Accept a string parameter specifying which game was being launched
   - Read parameters from a simple `.prm` file
   - Load the JVM

@@ -1,5 +1,7 @@
-# Small implementation of FindJNI which will utilize bundled JRE if JAVA_HOME
-# is not explicitly set.
+# SPDX-License-Identifier: BSD-2-Clause
+
+# Small implementation of FindJNI which will utilize bundled JRE if
+# USE_SYSTEM_JAVA is not explicitly set.
 
 if (USE_SYSTEM_JAVA)
     message(WARNING "Attempting to locate JNI from system - This is not fully supported")
