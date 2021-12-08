@@ -3,7 +3,9 @@
 #include <iostream>
 #include <memory>
 
-#include "Launcher.hpp"
+#include <core/Launcher.hpp>
+
+using Core::Launcher;
 
 int main(int argc, char** argv)
 {

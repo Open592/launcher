@@ -4,6 +4,8 @@
 
 #include "AppletViewerLoader.hpp"
 
+namespace Core {
+
 /**
  * AppletViewerLoader handles initializing the JVM and loading the Applet Viewer
  *
@@ -53,3 +55,5 @@ AppletViewerLoader::~AppletViewerLoader()
         std::cerr << "Failed to destroy JVM";
     }
 }
+
+} // namespace Core

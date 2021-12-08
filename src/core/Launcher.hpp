@@ -11,6 +11,8 @@
 
 namespace fs = std::filesystem;
 
+namespace Core {
+
 class Launcher {
 public:
     static std::unique_ptr<Launcher> init(int argc, char** argv);
@@ -30,3 +32,5 @@ private:
     std::vector<std::string> m_parameters;
     std::string m_profile;
 };
+
+}

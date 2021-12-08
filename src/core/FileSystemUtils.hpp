@@ -10,9 +10,9 @@ namespace fs = std::filesystem;
 /**
  * Platform dependent filesystem utilities
  */
-namespace Utilities {
+namespace Core::Utils {
 
 fs::path findConfigurationDirectory();
 fs::path getProjectConfigurationDirectory();
 
-} // namespace Utilities
+} // namespace Core::Utils

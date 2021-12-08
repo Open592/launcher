@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+namespace Core {
+
 class AppletViewerLoader {
 public:
     AppletViewerLoader(const std::vector<std::string>&);
@@ -18,3 +20,5 @@ private:
     JavaVM* m_vm;
     JNIEnv* m_env;
 };
+
+}

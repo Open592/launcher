@@ -6,9 +6,10 @@
 #include <memory>
 #include <stdexcept>
 
-#include "AppletViewerLoader.hpp"
 #include "FileSystemUtils.hpp"
 #include "Launcher.hpp"
+
+namespace Core {
 
 /**
  * Initialize the Launcher from command line arguments
@@ -59,7 +60,7 @@ void Launcher::loadAppletViewer()
  */
 void Launcher::loadParametersFromFile()
 {
-    fs::path configDirectory = Utilities::getProjectConfigurationDirectory();
+    fs::path configDirectory = Utils::getProjectConfigurationDirectory();
 
     if (configDirectory.empty()) {
         throw std::runtime_error(fmt::format("Failed to find configuration directory: {}", configDirectory.native()));
@@ -99,4 +100,6 @@ void Launcher::readParameterFile(const fs::path& path)
     }
 
     parameterFile.close();
+}
+
 }

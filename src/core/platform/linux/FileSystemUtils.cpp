@@ -6,7 +6,7 @@
 
 #include "../../FileSystemUtils.hpp"
 
-namespace Utilities {
+namespace Core::Utils {
 
 /**
  * Find the root configuration directory on Linux systems
@@ -58,4 +58,4 @@ fs::path getProjectConfigurationDirectory()
     return configurationDirectory / "open592";
 }
 
-}
+} // namespace Core::Utils
