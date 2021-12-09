@@ -18,8 +18,6 @@ namespace Core {
  * "profile". We use this profile to initialize the `.prm` file which includes
  * information to be passed to the JVM
  *
- * @param argc
- * @param argv
  * @return An instance of Launcher instantiated with the provided profile
  */
 std::unique_ptr<Launcher> Launcher::init(int argc, char** argv)
@@ -37,14 +35,28 @@ std::unique_ptr<Launcher> Launcher::init(int argc, char** argv)
     return std::make_unique<Launcher>(profile);
 }
 
+/**
+ * Initialize the Launcher with a profile with which it can retrieve a `.prm`
+ * file from the configuration directory. From this file the parameters which
+ * are passed to the JVM when initialized.
+ */
 Launcher::Launcher(std::string profile)
-    : m_profile(profile)
+{
+    fs::path parameterFilePath = this->findParameterFilePath(profile);
+    this->m_parameters = this->readParameterFile(parameterFilePath);
+}
+
+/**
+ * Initialize the launcher with a list of parameters which will be passed to the
+ * JVM when it's initialized.
+ */
+Launcher::Launcher(std::vector<std::string> parameters) noexcept
+    : m_parameters(std::move(parameters))
 {
 }
 
 /**
  * Handle initialzing the JVM and loading the Applet Viewer
- *
  */
 void Launcher::loadAppletViewer()
 {
@@ -58,7 +70,7 @@ void Launcher::loadAppletViewer()
  * Viewer. They will be stored for now in an internal vector. The location of
  * the parameter file is platform dependent.
  */
-void Launcher::loadParametersFromFile()
+fs::path Launcher::findParameterFilePath(std::string profile) const
 {
     fs::path configDirectory = Utils::getProjectConfigurationDirectory();
 
@@ -66,7 +78,7 @@ void Launcher::loadParametersFromFile()
         throw std::runtime_error(fmt::format("Failed to find configuration directory: {}", configDirectory.native()));
     }
 
-    std::string parameterFileName = this->m_profile + ".prm";
+    std::string parameterFileName = profile + ".prm";
     fs::path parameterFilePath = configDirectory / parameterFileName;
 
     if (!std::filesystem::exists(parameterFilePath)) {
@@ -77,7 +89,7 @@ void Launcher::loadParametersFromFile()
         throw std::runtime_error(fmt::format("{} is not a valid parameter file", parameterFilePath.native()));
     }
 
-    this->readParameterFile(parameterFilePath);
+    return parameterFilePath;
 }
 
 /**
@@ -85,21 +97,24 @@ void Launcher::loadParametersFromFile()
  *
  * @param path
  */
-void Launcher::readParameterFile(const fs::path& path)
+std::vector<std::string> Launcher::readParameterFile(const fs::path& path) const
 {
+    std::vector<std::string> parameters;
     std::ifstream parameterFile = std::ifstream(path, std::ifstream::in);
 
     if (!parameterFile.is_open()) {
         throw std::runtime_error("Failed to open parameter file");
     }
 
-    std::string line;
+    std::string currentParameter;
 
-    while (std::getline(parameterFile, line)) {
-        this->m_parameters.push_back(line);
+    while (std::getline(parameterFile, currentParameter)) {
+        parameters.push_back(currentParameter);
     }
 
     parameterFile.close();
+
+    return parameters;
 }
 
 }

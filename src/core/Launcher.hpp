@@ -17,20 +17,19 @@ class Launcher {
 public:
     static std::unique_ptr<Launcher> init(int argc, char** argv);
 
-    explicit Launcher(std::string);
+    Launcher(std::string);
+    Launcher(std::vector<std::string>) noexcept;
 
     const std::vector<std::string>& getParameters() const noexcept { return m_parameters; };
-    std::string getProfile() const noexcept { return m_profile; }
 
     void loadAppletViewer();
-    void loadParametersFromFile();
 
 private:
-    void readParameterFile(const fs::path&);
+    fs::path findParameterFilePath(std::string) const;
+    std::vector<std::string> readParameterFile(const fs::path&) const;
 
     std::unique_ptr<AppletViewerLoader> m_appletViewerLoader;
     std::vector<std::string> m_parameters;
-    std::string m_profile;
 };
 
 }
