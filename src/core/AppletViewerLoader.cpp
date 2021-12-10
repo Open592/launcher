@@ -79,8 +79,8 @@ void AppletViewerLoader::init(std::string_view className)
         throw std::runtime_error(fmt::format("Failed to find java class: {}", className));
     }
 
-    jmethodID mainMethodID = this->m_env->GetStaticMethodID(appletViewerClass, "main", "(Ljava/lang/String;)V");
-    jclass stringClass = this->m_env->FindClass("java/lang/class");
+    jmethodID mainMethodID = this->m_env->GetStaticMethodID(appletViewerClass, "main", "([Ljava/lang/String;)V");
+    jclass stringClass = this->m_env->FindClass("java/lang/String");
     jobjectArray mainArgs = this->m_env->NewObjectArray(0, stringClass, nullptr);
 
     this->m_env->CallStaticVoidMethod(appletViewerClass, mainMethodID, mainArgs);
