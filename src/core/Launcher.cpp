@@ -59,7 +59,9 @@ Launcher::Launcher(std::vector<std::string> parameters) noexcept
  */
 void Launcher::loadAppletViewer()
 {
-    m_appletViewerLoader = std::make_unique<AppletViewerLoader>(m_parameters);
+    m_appletViewerLoader = std::make_unique<AppletViewerLoader>(this->m_parameters);
+
+    m_appletViewerLoader->init(m_className);
 }
 
 /**

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: BSD-2-Clause
 
+#include <fmt/core.h>
 #include <iostream>
+#include <stdexcept>
 
 #include "AppletViewerLoader.hpp"
 
@@ -35,10 +37,23 @@ AppletViewerLoader::AppletViewerLoader(const std::vector<std::string>& parameter
     jint ret = JNI_CreateJavaVM(&this->m_vm, reinterpret_cast<void**>(&this->m_env), &vmArgs);
 
     if (ret != JNI_OK) {
-        throw std::runtime_error("Failed to start JVM");
-    }
+        std::string_view errorDetail;
 
-    std::cout << "Started JVM" << '\n';
+        switch (ret) {
+        case JNI_EINVAL:
+            errorDetail = "Invalid arguments supplied";
+        case JNI_EVERSION:
+            errorDetail = "Invalid JNI version";
+        case JNI_ENOMEM:
+            errorDetail = "Not enough memory";
+        case JNI_EEXIST:
+            errorDetail = "JVM already exists";
+        default:
+            errorDetail = "Unkown error";
+        }
+
+        throw std::runtime_error(fmt::format("Failed to start JVM {}", errorDetail));
+    }
 }
 
 AppletViewerLoader::~AppletViewerLoader()
@@ -54,6 +69,21 @@ AppletViewerLoader::~AppletViewerLoader()
     if (this->m_vm->DestroyJavaVM() != JNI_OK) {
         std::cerr << "Failed to destroy JVM";
     }
+}
+
+void AppletViewerLoader::init(std::string_view className)
+{
+    jclass appletViewerClass = this->m_env->FindClass(className.data());
+
+    if (appletViewerClass == nullptr) {
+        throw std::runtime_error(fmt::format("Failed to find java class: {}", className));
+    }
+
+    jmethodID mainMethodID = this->m_env->GetStaticMethodID(appletViewerClass, "main", "(Ljava/lang/String;)V");
+    jclass stringClass = this->m_env->FindClass("java/lang/class");
+    jobjectArray mainArgs = this->m_env->NewObjectArray(0, stringClass, nullptr);
+
+    this->m_env->CallStaticVoidMethod(appletViewerClass, mainMethodID, mainArgs);
 }
 
 } // namespace Core

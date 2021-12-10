@@ -14,7 +14,7 @@ public:
     AppletViewerLoader(const std::vector<std::string>&);
     ~AppletViewerLoader();
 
-    JNIEnv* getJNIEnv() const noexcept;
+    void init(std::string_view);
 
 private:
     JavaVM* m_vm;
