@@ -40,10 +40,9 @@ std::unique_ptr<Launcher> Launcher::init(int argc, char** argv)
  * file from the configuration directory. From this file the parameters which
  * are passed to the JVM when initialized.
  */
-Launcher::Launcher(std::string profile)
+Launcher::Launcher(std::string_view profile)
 {
-    fs::path parameterFilePath = this->findParameterFilePath(profile);
-    this->m_parameters = this->readParameterFile(parameterFilePath);
+    this->loadParameterData(profile);
 }
 
 /**
@@ -70,7 +69,7 @@ void Launcher::loadAppletViewer()
  * Viewer. They will be stored for now in an internal vector. The location of
  * the parameter file is platform dependent.
  */
-fs::path Launcher::findParameterFilePath(std::string profile) const
+fs::path Launcher::findParameterFilePath(std::string_view profile)
 {
     fs::path configDirectory = Utils::getProjectConfigurationDirectory();
 
@@ -78,7 +77,7 @@ fs::path Launcher::findParameterFilePath(std::string profile) const
         throw std::runtime_error(fmt::format("Failed to find configuration directory: {}", configDirectory.native()));
     }
 
-    std::string parameterFileName = profile + ".prm";
+    std::string parameterFileName = fmt::format("{}.prm", profile);
     fs::path parameterFilePath = configDirectory / parameterFileName;
 
     if (!std::filesystem::exists(parameterFilePath)) {
@@ -97,13 +96,13 @@ fs::path Launcher::findParameterFilePath(std::string profile) const
  *
  * @param path
  */
-std::vector<std::string> Launcher::readParameterFile(const fs::path& path) const
+std::vector<std::string> Launcher::readParameterFile(const fs::path& path)
 {
     std::vector<std::string> parameters;
     std::ifstream parameterFile = std::ifstream(path, std::ifstream::in);
 
     if (!parameterFile.is_open()) {
-        throw std::runtime_error("Failed to open parameter file");
+        throw std::runtime_error(fmt::format("Failed to open parameter file: {}", path.native()));
     }
 
     std::string currentParameter;
@@ -115,6 +114,31 @@ std::vector<std::string> Launcher::readParameterFile(const fs::path& path) const
     parameterFile.close();
 
     return parameters;
+}
+
+/**
+ * Load parameter data
+ *
+ * The `.prm` file contains two sets of data. Parameters for the JVM and the
+ * class which needs to be loaded. Within this function we will pull both
+ * pieces of data from the file and store them.
+ */
+void Launcher::loadParameterData(std::string_view profile)
+{
+    fs::path parameterFilePath = Launcher::findParameterFilePath(profile);
+    std::vector<std::string> parameterFileData = Launcher::readParameterFile(parameterFilePath);
+
+    if (parameterFileData.empty()) {
+        throw std::runtime_error(fmt::format("Found empty parameter file: {}", parameterFilePath.native()));
+    }
+
+    // In the case that the parameter file only has a single entry, we will
+    // treat it as the class name, and attempt to load the JVM without any
+    // parameters.
+    this->m_className = std::move(parameterFileData.back());
+    parameterFileData.pop_back();
+
+    this->m_parameters = std::move(parameterFileData);
 }
 
 }
