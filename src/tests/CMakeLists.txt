@@ -4,18 +4,24 @@ find_package(Java REQUIRED)
 include(UseJava)
 include(GoogleTest)
 
+set(TEST_DATA_DIRECTORY "${CMAKE_BINARY_DIR}/_test-data")
+file(MAKE_DIRECTORY ${TEST_DATA_DIRECTORY})
+
 add_jar(mockopen592appletviewer
-    SOURCES MockOpen592AppletViewer.java
+    SOURCES mocks/MockOpen592AppletViewer.java
     ENTRYPOINT MockOpen592AppletViewer
-    MANIFEST MockOpen592AppletViewer.MF
-    OUTPUT_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    MANIFEST mocks/MockOpen592AppletViewer.MF
+    OUTPUT_DIR ${TEST_DATA_DIRECTORY}
 )
 
-get_target_property(MAV_JAR mockopen592appletviewer JAR_FILE)
-get_target_property(MAV_CLASSDIR mockopen592appletviewer CLASSDIR)
+# Create `.prm` file
+get_target_property(JAR_CLASS_PATH mockopen592appletviewer JAR_FILE)
+set(JAVA_CLASS MockOpen592AppletViewer)
 
-message(STATUS ${MAV_JAR})
-message(STATUS ${MAV_CLASSDIR})
+configure_file(
+    templates/parameters.prm.in
+    "${TEST_DATA_DIRECTORY}/parameters.prm"
+)
 
 add_executable(
     launcher_test
