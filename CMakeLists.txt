@@ -28,5 +28,15 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if(ENABLE_TESTING)
+    include(CTest)
+    include(FetchGoogleTest)
+
+    # Add a target for calling ctest with verbose output on failure
+    add_custom_target(check
+        COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+    )
+endif()
+
 add_subdirectory(vendor)
 add_subdirectory(src)
