@@ -84,6 +84,13 @@ void AppletViewerLoader::init(std::string_view className)
     jobjectArray mainArgs = this->m_env->NewObjectArray(0, stringClass, nullptr);
 
     this->m_env->CallStaticVoidMethod(appletViewerClass, mainMethodID, mainArgs);
+
+    // Detect if an exception is thrown from the applet viewer
+    jthrowable appletViewerException = this->m_env->ExceptionOccurred();
+
+    if (appletViewerException != nullptr) {
+        throw std::runtime_error("Appletviewer did not exit cleanly");
+    }
 }
 
 } // namespace Core
