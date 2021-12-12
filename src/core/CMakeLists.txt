@@ -3,6 +3,7 @@
 add_library(core STATIC
     AppletViewerLoader.cpp
     AppletViewerLoader.hpp
+    FileSystemUtils.hpp
     Launcher.cpp
     Launcher.hpp
 )

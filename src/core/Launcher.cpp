@@ -40,9 +40,19 @@ std::unique_ptr<Launcher> Launcher::init(int argc, char** argv)
  * file from the configuration directory. From this file the parameters which
  * are passed to the JVM when initialized.
  */
-Launcher::Launcher(std::string_view profile)
+Launcher::Launcher(std::string profile)
 {
-    this->loadParameterData(profile);
+    fs::path parameterFilePath = Launcher::findParameterFilePath(profile);
+
+    this->loadParameterData(parameterFilePath);
+}
+
+/**
+ * Initialize the Launcher with a direct path to the parameter file.
+ */
+Launcher::Launcher(const fs::path& parameterFilePath)
+{
+    this->loadParameterData(parameterFilePath);
 }
 
 /**
@@ -59,9 +69,9 @@ Launcher::Launcher(std::vector<std::string> parameters) noexcept
  */
 void Launcher::loadAppletViewer()
 {
-    m_appletViewerLoader = std::make_unique<AppletViewerLoader>(this->m_parameters);
+    AppletViewerLoader loader(this->m_parameters);
 
-    m_appletViewerLoader->init(m_className);
+    loader.init(m_className);
 }
 
 /**
@@ -125,9 +135,8 @@ std::vector<std::string> Launcher::readParameterFile(const fs::path& path)
  * class which needs to be loaded. Within this function we will pull both
  * pieces of data from the file and store them.
  */
-void Launcher::loadParameterData(std::string_view profile)
+void Launcher::loadParameterData(const fs::path& parameterFilePath)
 {
-    fs::path parameterFilePath = Launcher::findParameterFilePath(profile);
     std::vector<std::string> parameterFileData = Launcher::readParameterFile(parameterFilePath);
 
     if (parameterFileData.empty()) {

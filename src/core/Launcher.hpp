@@ -17,8 +17,9 @@ class Launcher {
 public:
     static std::unique_ptr<Launcher> init(int argc, char** argv);
 
-    Launcher(std::string_view);
-    Launcher(std::vector<std::string>) noexcept;
+    explicit Launcher(std::string);
+    explicit Launcher(const fs::path&);
+    explicit Launcher(std::vector<std::string>) noexcept;
 
     const std::vector<std::string>& getParameters() const noexcept { return m_parameters; };
     const std::string& getClassName() const noexcept { return m_className; };
@@ -29,9 +30,8 @@ private:
     static std::vector<std::string> readParameterFile(const fs::path&);
     static fs::path findParameterFilePath(std::string_view);
 
-    void loadParameterData(std::string_view);
+    void loadParameterData(const fs::path&);
 
-    std::unique_ptr<AppletViewerLoader> m_appletViewerLoader;
     std::string m_className;
     std::vector<std::string> m_parameters;
 };
