@@ -28,9 +28,15 @@ add_executable(
     launcher_test.cpp
 )
 
-target_link_libraries(
-    launcher_test
-    gtest_main
+target_compile_definitions(launcher_test
+    PUBLIC "TEST_DATA_DIR=\"${TEST_DATA_DIRECTORY}\""
+)
+
+target_include_directories(launcher_test
+    PRIVATE ${CMAKE_SOURCE_DIR}/src
+)
+target_link_libraries(launcher_test
+    PRIVATE core gtest_main
 )
 
 gtest_discover_tests(launcher_test)
