@@ -11,17 +11,16 @@ namespace fs = std::filesystem;
  * The goal of this test is verify the successful execution of every part of
  * the launcher:
  *
- * - Successfully able to load a parameter file when given a direct path
+ * - Successfully able to resolve parameter file path
  * - Successfully able to parse JVM parameters
  * - Successfully able to initialize the JVM with the provided parameters
  * - Successfully able to call the main method of the provided class
  *
  * The test is run as follows:
  *
- * - We verify that the parameter file exists within the `TEST_CONFIG_DIR`
- * - Given the `TEST_CONIG_DIR` we create an exchange file which includes a
- * known text.
- * - We initialize the launcher with the path to the above parameter file
+ * - Given the `MOCK_PROJECT_CONFIG_DIRECTORY` we create an exchange file which
+ * includes a known text.
+ * - We initialize the launcher
  * - The mock appletviewer jar will read the exchange file and verify that
  * it contains the known text.
  * - The mock appletviewer jar will then replace the known text with it's own
