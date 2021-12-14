@@ -37,26 +37,24 @@ const std::string EXPECTED_RECEIVER_KNOWN_TEXT = "hello-from-java";
 
 TEST(LauncherTest, VerifyJarSuccessfullyLoaded)
 {
-    fs::path testDataDirectory = fs::path(TEST_DATA_DIR);
+    fs::path testDataDirectory = fs::path(MOCK_PROJECT_CONFIG_DIRECTORY);
 
-    EXPECT_TRUE(fs::exists(testDataDirectory));
+    EXPECT_TRUE(fs::exists(testDataDirectory)) << "Expected mock project config directory to exist";
 
     std::ofstream exchangeFile(testDataDirectory / EXCHANGE_FILE_NAME);
 
-    EXPECT_TRUE(exchangeFile.is_open());
+    EXPECT_TRUE(exchangeFile.is_open()) << "Failed to open exchange file";
 
     exchangeFile << SENDER_KNOWN_TEXT << std::endl;
 
     exchangeFile.close();
 
-    fs::path parameterFilePath = testDataDirectory / PARAMETER_FILE_NAME;
+    // The name of the parameters file is "parameters.prm". Because of this we
+    // will pass "parameters" as the profile name.
+    Core::Launcher launcher(static_cast<std::string>("parameters"));
 
-    EXPECT_TRUE(fs::exists(parameterFilePath));
-
-    Core::Launcher launcher(parameterFilePath);
-
-    EXPECT_FALSE(launcher.getClassName().empty());
-    EXPECT_FALSE(launcher.getParameters().empty());
+    EXPECT_FALSE(launcher.getClassName().empty()) << "Expected Launcher to correctly parse Java class name";
+    EXPECT_FALSE(launcher.getParameters().empty()) << "Expected Launcher to correctly parse JVM parameters";
 
     EXPECT_NO_THROW(launcher.loadAppletViewer());
 

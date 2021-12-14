@@ -4,14 +4,15 @@ find_package(Java REQUIRED)
 include(UseJava)
 include(GoogleTest)
 
-set(TEST_DATA_DIRECTORY "${CMAKE_BINARY_DIR}/_test-data")
-file(MAKE_DIRECTORY ${TEST_DATA_DIRECTORY})
+set(TEST_CONFIG_DIRECTORY "${CMAKE_BINARY_DIR}/_test-config")
+set(MOCK_PROJECT_CONFIG_DIRECTORY "${TEST_CONFIG_DIRECTORY}/open592")
+file(MAKE_DIRECTORY ${MOCK_PROJECT_CONFIG_DIRECTORY})
 
 add_jar(mockopen592appletviewer
     SOURCES mocks/MockOpen592AppletViewer.java
     ENTRYPOINT MockOpen592AppletViewer
     MANIFEST mocks/MockOpen592AppletViewer.MF
-    OUTPUT_DIR ${TEST_DATA_DIRECTORY}
+    OUTPUT_DIR ${MOCK_PROJECT_CONFIG_DIRECTORY}
 )
 
 # Create `.prm` file
@@ -20,7 +21,7 @@ set(JAVA_CLASS MockOpen592AppletViewer)
 
 configure_file(
     templates/parameters.prm.in
-    "${TEST_DATA_DIRECTORY}/parameters.prm"
+    "${MOCK_PROJECT_CONFIG_DIRECTORY}/parameters.prm"
 )
 
 add_executable(
@@ -29,7 +30,7 @@ add_executable(
 )
 
 target_compile_definitions(launcher_test
-    PUBLIC "TEST_DATA_DIR=\"${TEST_DATA_DIRECTORY}\""
+    PUBLIC "MOCK_PROJECT_CONFIG_DIRECTORY=\"${MOCK_PROJECT_CONFIG_DIRECTORY}\""
 )
 
 target_include_directories(launcher_test
@@ -39,4 +40,4 @@ target_link_libraries(launcher_test
     PRIVATE core gtest_main
 )
 
-gtest_discover_tests(launcher_test)
+gtest_discover_tests(launcher_test PROPERTIES ENVIRONMENT "XDG_CONFIG_HOME=${TEST_CONFIG_DIRECTORY}")
