@@ -48,14 +48,6 @@ Launcher::Launcher(std::string profile)
 }
 
 /**
- * Initialize the Launcher with a direct path to the parameter file.
- */
-Launcher::Launcher(const fs::path& parameterFilePath)
-{
-    this->loadParameterData(parameterFilePath);
-}
-
-/**
  * Initialize the launcher with a list of parameters which will be passed to the
  * JVM when it's initialized.
  */

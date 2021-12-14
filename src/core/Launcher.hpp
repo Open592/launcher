@@ -18,7 +18,6 @@ public:
     static std::unique_ptr<Launcher> init(int argc, char** argv);
 
     explicit Launcher(std::string);
-    explicit Launcher(const fs::path&);
     explicit Launcher(std::vector<std::string>) noexcept;
 
     const std::vector<std::string>& getParameters() const noexcept { return m_parameters; };
