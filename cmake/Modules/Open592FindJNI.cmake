@@ -24,31 +24,37 @@ else()
     message(STATUS "Attempting to locate JNI from bundled JRE: ${JRE_DIRECTORY}")
 
     find_library(JAVA_JVM_LIBRARY jvm
+        HINTS
         ${JRE_DIRECTORY}/lib/server
+        ${JRE_DIRECTORY}/lib
         REQUIRED
     )
 
     find_library(JAVA_AWT_LIBRARY jawt
+        HINTS
         ${JRE_DIRECTORY}/lib
         REQUIRED
     )
 
     find_path(JAVA_INCLUDE_PATH jni.h
+        HINTS
         ${JRE_DIRECTORY}/include
         REQUIRED
     )
 
     find_path(JAVA_INCLUDE_PATH2 NAMES jni_md.h jniport.h
-        PATHS
+        HINTS
         ${JAVA_INCLUDE_PATH}
         ${JAVA_INCLUDE_PATH}/linux
         ${JAVA_INCLUDE_PATH}/darwin
-        ${JAVA_INCLUDE_PATH}/windows
+        ${JAVA_INCLUDE_PATH}/win32
         REQUIRED
     )
 
     find_path(JAVA_AWT_INCLUDE_PATH jawt.h
+        HINTS
         ${JAVA_INCLUDE_PATH}
+        ${JAVA_INCLUDE_PATH}/win32
         REQUIRED
     )
 
