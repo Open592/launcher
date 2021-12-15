@@ -78,18 +78,18 @@ fs::path Launcher::findParameterFilePath(std::string_view profile)
     fs::path configDirectory = Utils::getProjectConfigurationDirectory();
 
     if (configDirectory.empty()) {
-        throw std::runtime_error(fmt::format("Failed to find configuration directory: {}", configDirectory.native()));
+        throw std::runtime_error(fmt::format("Failed to find configuration directory: {}", configDirectory.generic_string()));
     }
 
     std::string parameterFileName = fmt::format("{}.prm", profile);
     fs::path parameterFilePath = configDirectory / parameterFileName;
 
     if (!std::filesystem::exists(parameterFilePath)) {
-        throw std::runtime_error(fmt::format("Failed to find parameter file: {}", parameterFilePath.native()));
+        throw std::runtime_error(fmt::format("Failed to find parameter file: {}", parameterFilePath.generic_string()));
     }
 
     if (!std::filesystem::is_regular_file(parameterFilePath)) {
-        throw std::runtime_error(fmt::format("{} is not a valid parameter file", parameterFilePath.native()));
+        throw std::runtime_error(fmt::format("{} is not a valid parameter file", parameterFilePath.generic_string()));
     }
 
     return parameterFilePath;
@@ -106,7 +106,7 @@ std::vector<std::string> Launcher::readParameterFile(const fs::path& path)
     std::ifstream parameterFile = std::ifstream(path, std::ifstream::in);
 
     if (!parameterFile.is_open()) {
-        throw std::runtime_error(fmt::format("Failed to open parameter file: {}", path.native()));
+        throw std::runtime_error(fmt::format("Failed to open parameter file: {}", path.generic_string()));
     }
 
     std::string currentParameter;
@@ -132,7 +132,7 @@ void Launcher::loadParameterData(const fs::path& parameterFilePath)
     std::vector<std::string> parameterFileData = Launcher::readParameterFile(parameterFilePath);
 
     if (parameterFileData.empty()) {
-        throw std::runtime_error(fmt::format("Found empty parameter file: {}", parameterFilePath.native()));
+        throw std::runtime_error(fmt::format("Found empty parameter file: {}", parameterFilePath.generic_string()));
     }
 
     // In the case that the parameter file only has a single entry, we will
