@@ -13,6 +13,34 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    add_compile_options(
+        -march=native
+        -Wall
+        -pedantic
+        -Wextra
+        -Wstrict-overflow
+        -Wconversion
+        -fno-strict-aliasing
+        -Werror
+        "$<$<CONFIG:DEBUG>:-g>"
+        "$<$<CONFIG:DEBUG>:-pg>"
+        "$<$<CONFIG:DEBUG>:-Wshadow>"
+        "$<$<CONFIG:DEBUG>:-O0>"
+        "$<$<CONFIG:RELEASE>:-O3>"
+    )
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_compile_options(
+        "/Wall"
+        "/permissive"
+        "$<$<CONFIG:DEBUG>:/Z7>"
+        "$<$<CONFIG:RELEASE>:/Ox>"
+    )
+else()
+    message(FATAL "Unsupported compiler detected: ${CMAKE_CXX_COMPILER_ID}")
+endif()
+
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
