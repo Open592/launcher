@@ -1,0 +1,6 @@
+-Djava.class.path=@ERROR_CASE_JAR_CLASS_PATH@
+-Dsun.java2d.noddraw=true
+-Djava.net.preferIPv4Stack=true
+-Dopen592.test.data.dir=@MOCK_PROJECT_CONFIG_DIRECTORY@
+-Xmx128m
+MockJavaException

@@ -1,11 +1,16 @@
 #include <filesystem>
 #include <fstream>
 #include <gtest/gtest.h>
+#include <stdexcept>
 #include <string>
 
 #include <core/Launcher.hpp>
 
 namespace fs = std::filesystem;
+
+const std::string EXCHANGE_FILE_NAME = "exchange.txt";
+const std::string SENDER_KNOWN_TEXT = "hello-from-cpp";
+const std::string EXPECTED_RECEIVER_KNOWN_TEXT = "hello-from-java";
 
 /**
  * The goal of this test is verify the successful execution of every part of
@@ -29,12 +34,7 @@ namespace fs = std::filesystem;
  * verify that the known text has been changed and is correct.
  * - We will delete the exchange file.
  */
-const std::string PARAMETER_FILE_NAME = "parameters.prm";
-const std::string EXCHANGE_FILE_NAME = "exchange.txt";
-const std::string SENDER_KNOWN_TEXT = "hello-from-cpp";
-const std::string EXPECTED_RECEIVER_KNOWN_TEXT = "hello-from-java";
-
-TEST(LauncherTest, VerifyJarSuccessfullyLoaded)
+TEST(LauncherFunctionalTest, VerifyJarSuccessfullyLoaded)
 {
     fs::path testDataDirectory = fs::path(MOCK_PROJECT_CONFIG_DIRECTORY);
 
@@ -48,9 +48,9 @@ TEST(LauncherTest, VerifyJarSuccessfullyLoaded)
 
     exchangeFile.close();
 
-    // The name of the parameters file is "parameters.prm". Because of this we
-    // will pass "parameters" as the profile name.
-    Core::Launcher launcher(static_cast<std::string>("parameters"));
+    // The name of the parameters file is "happypath.prm". Because of this we
+    // will pass "happypath" as the profile name.
+    Core::Launcher launcher("happypath");
 
     EXPECT_FALSE(launcher.getClassName().empty()) << "Expected Launcher to correctly parse Java class name";
     EXPECT_FALSE(launcher.getParameters().empty()) << "Expected Launcher to correctly parse JVM parameters";
@@ -67,4 +67,50 @@ TEST(LauncherTest, VerifyJarSuccessfullyLoaded)
     updatedExchangeFile.close();
 
     EXPECT_NO_THROW(fs::remove(testDataDirectory / EXCHANGE_FILE_NAME));
+}
+
+/**
+ * The goal of this test is validate the handling of the launcher when it
+ * encounters a sitation where it cannot load the Java class specified in the
+ * `.prm` file.
+ *
+ * - We will initialize the launcher with a `.prm` file which is purposefully
+ * flawed in that it's classname points to nothing. It will have a valid
+ * classpath which points to a valid jar. But that won't help with anything.
+ *
+ * We should receive an exception from the launcher `loadAppletViewer` method
+ * since it will fail to load.
+ */
+TEST(LauncherFunctionalTest, VerifyHandlingOfClassNotFound)
+{
+    // The name of the parameters file is "classnotfound.prm". Because of this we
+    // will pass "classnotfound" as the profile name.
+    Core::Launcher launcher("classnotfound");
+
+    EXPECT_FALSE(launcher.getClassName().empty()) << "Expected Launcher to correctly parse Java class name";
+    EXPECT_FALSE(launcher.getParameters().empty()) << "Expected Launcher to correctly parse JVM parameters";
+
+    EXPECT_THROW(launcher.loadAppletViewer(), std::runtime_error);
+}
+
+/**
+ * The goal of this test is to validate the handling of Java exceptions thrown
+ * within the Java code loaded by the launcher.
+ *
+ * - We will initialize the launcher with a `.prm` file which is purposefully
+ * pointing to a jar which will always throw an exception.
+ *
+ * This tests validates that the launcher correctly sees that an exception was
+ * thrown and that the launcher did not exit cleanly.
+ */
+TEST(LauncherFunctionalTest, VerifyJavaException)
+{
+    // The name of the parameters file is "javaerror.prm". Because of this we
+    // will pass "javaerror" as the profile name.
+    Core::Launcher launcher("javaerror");
+
+    EXPECT_FALSE(launcher.getClassName().empty()) << "Expected Launcher to correctly parse Java class name";
+    EXPECT_FALSE(launcher.getParameters().empty()) << "Expected Launcher to correctly parse JVM parameters";
+
+    EXPECT_THROW(launcher.loadAppletViewer(), std::runtime_error);
 }

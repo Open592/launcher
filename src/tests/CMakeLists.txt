@@ -10,18 +10,33 @@ file(MAKE_DIRECTORY ${MOCK_PROJECT_CONFIG_DIRECTORY})
 
 add_jar(mockopen592appletviewer
     SOURCES mocks/MockOpen592AppletViewer.java
-    ENTRYPOINT MockOpen592AppletViewer
-    MANIFEST mocks/MockOpen592AppletViewer.MF
+    ENTRY_POINT MockOpen592AppletViewer
+    OUTPUT_DIR ${MOCK_PROJECT_CONFIG_DIRECTORY}
+)
+
+add_jar(mockjavaexception
+    SOURCES mocks/MockJavaException.java
+    ENTRY_POINT MockJavaException
     OUTPUT_DIR ${MOCK_PROJECT_CONFIG_DIRECTORY}
 )
 
 # Create `.prm` file
-get_target_property(JAR_CLASS_PATH mockopen592appletviewer JAR_FILE)
-set(JAVA_CLASS MockOpen592AppletViewer)
+get_target_property(HAPPY_PATH_JAR_CLASS_PATH mockopen592appletviewer JAR_FILE)
+get_target_property(ERROR_CASE_JAR_CLASS_PATH mockjavaexception JAR_FILE)
 
 configure_file(
-    templates/parameters.prm.in
-    "${MOCK_PROJECT_CONFIG_DIRECTORY}/parameters.prm"
+    templates/classnotfound.prm.in
+    "${MOCK_PROJECT_CONFIG_DIRECTORY}/classnotfound.prm"
+)
+
+configure_file(
+    templates/happypath.prm.in
+    "${MOCK_PROJECT_CONFIG_DIRECTORY}/happypath.prm"
+)
+
+configure_file(
+    templates/javaerror.prm.in
+    "${MOCK_PROJECT_CONFIG_DIRECTORY}/javaerror.prm"
 )
 
 add_executable(
