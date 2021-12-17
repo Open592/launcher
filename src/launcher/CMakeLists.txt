@@ -8,7 +8,7 @@ set_target_properties(launcher
     LANGUAGES CXX
 )
 
-# Include /src to allow for preserving directory hierachy
+# Include /src to allow for preserving directory hierarchy
 target_include_directories(launcher PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_link_libraries(launcher PRIVATE core)
 

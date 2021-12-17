@@ -55,4 +55,4 @@ target_link_libraries(launcher_test
     PRIVATE core gtest_main
 )
 
-gtest_discover_tests(launcher_test PROPERTIES ENVIRONMENT "XDG_CONFIG_HOME=${TEST_CONFIG_DIRECTORY}")
+gtest_discover_tests(launcher_test PROPERTIES ENVIRONMENT "OPEN592_OVERRIDE_OS_CONFIG_DIR=${TEST_CONFIG_DIRECTORY}")

@@ -4,7 +4,11 @@
 # USE_SYSTEM_JAVA is not explicitly set.
 
 if (USE_SYSTEM_JAVA)
-    message(WARNING "Attempting to locate JNI from system - This is not fully supported")
+    if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        message(FATAL_ERROR "Using system JNI is not supported on Windows")
+    else()
+        message(WARNING "Attempting to locate JNI from system - This is not fully supported")
+    endif()
 
     find_package(JNI REQUIRED)
 else()
@@ -35,6 +39,20 @@ else()
         ${JRE_DIRECTORY}/lib
         REQUIRED
     )
+
+    if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        find_file(JAVA_JVM_DLL jvm.dll
+            HINTS
+            ${JRE_DIRECTORY}/bin/server
+            REQUIRED
+        )
+
+        if (JAVA_JVM_DLL-NOTFOUND)
+            message(FATAL_ERROR "Failed to find jvm.dll")
+        endif()
+
+        mark_as_advanced(JAVA_JVM_DLL)
+    endif()
 
     find_path(JAVA_INCLUDE_PATH jni.h
         HINTS
