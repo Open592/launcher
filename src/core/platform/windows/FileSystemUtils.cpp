@@ -3,11 +3,33 @@
 #include <windows.h>
 #include <shlobj.h>
 #include <filesystem>
+#include <optional>
 
 #include "../../FileSystemUtils.hpp"
 
-namespace Core::Utils {
+static std::optional<std::wstring> getOverrideConfigurationDirectory()
+{
+    // https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getenvironmentvariablea
+    DWORD bufferSize = 65535;
+    std::wstring buffer;
 
+    buffer.resize(bufferSize);
+
+    bufferSize = GetEnvironmentVariableW(L"OPEN592_OVERRIDE_OS_CONFIG_DIR", buffer.data(), bufferSize);
+
+    if (bufferSize == 0 || buffer.empty()) {
+        return std::nullopt;
+    }
+
+    if (GetLastError() == ERROR_ENVVAR_NOT_FOUND) {
+        return std::nullopt;
+    }
+
+    buffer.resize(bufferSize);
+
+    return buffer;
+}
+namespace Core::Utils {
 /**
  * Find the root configuration directory on Linux systems
  *
@@ -18,7 +40,7 @@ fs::path findConfigurationDirectory()
     PWSTR localAppDataDirectory;
 
     if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &localAppDataDirectory))) {
-        auto localAppDataPath = fs::path(localAppDataDirectory);
+        auto localAppDataPath = fs::path(std::move(localAppDataDirectory));
 
         CoTaskMemFree(localAppDataDirectory);
 
@@ -35,6 +57,14 @@ fs::path findConfigurationDirectory()
  */
 fs::path getProjectConfigurationDirectory()
 {
+    // First check if an override directory is set
+    std::optional<std::wstring> overrideConfigurationDirectory = getOverrideConfigurationDirectory();
+
+    if (overrideConfigurationDirectory.has_value()) {
+        return fs::path(std::move(overrideConfigurationDirectory.value())) / "open592";
+    }
+
+    // Otherwise, we will use the standard OS application directory
     fs::path configurationDirectory = findConfigurationDirectory();
 
     if (configurationDirectory.empty()) {
