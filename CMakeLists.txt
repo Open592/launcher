@@ -23,7 +23,6 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
         -Wstrict-overflow
         -Wconversion
         -fno-strict-aliasing
-        -Werror
         "$<$<CONFIG:DEBUG>:-g>"
         "$<$<CONFIG:DEBUG>:-pg>"
         "$<$<CONFIG:DEBUG>:-Wshadow>"
