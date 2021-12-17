@@ -14,8 +14,6 @@ namespace Core::Utils {
  * We will attempt to honor the users preference if they have set
  * `XDG_CONFIG_HOME` - if that doesn't work, or is unset we will then fallback
  * to using `$HOME/.config`
- *
- * @return std::filesystem::path
  */
 fs::path findConfigurationDirectory()
 {
@@ -44,8 +42,6 @@ fs::path findConfigurationDirectory()
 
 /**
  * Find the configuration directory for the project
- *
- * @return std::filesystem::path
  */
 fs::path getProjectConfigurationDirectory()
 {

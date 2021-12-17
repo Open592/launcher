@@ -13,6 +13,11 @@ if (UNIX AND NOT APPLE)
         PRIVATE
         platform/linux/FileSystemUtils.cpp
     )
+elseif(MSVC)
+    target_sources(core
+        PRIVATE
+        platform/windows/FileSystemUtils.cpp
+    )
 else()
     message(FATAL_ERROR "At this time only unix like systems are supported.")
 endif()
