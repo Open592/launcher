@@ -42,12 +42,20 @@ AppletViewerLoader::AppletViewerLoader(const std::vector<std::string>& parameter
         switch (ret) {
         case JNI_EINVAL:
             errorDetail = "Invalid arguments supplied";
+
+            break;
         case JNI_EVERSION:
             errorDetail = "Invalid JNI version";
+
+            break;
         case JNI_ENOMEM:
             errorDetail = "Not enough memory";
+
+            break;
         case JNI_EEXIST:
             errorDetail = "JVM already exists";
+
+            break;
         default:
             errorDetail = "Unkown error";
         }

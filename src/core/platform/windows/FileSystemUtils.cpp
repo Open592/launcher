@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: BSD-2-Clause
 
-#include <windows.h>
-#include <shlobj.h>
 #include <filesystem>
 #include <optional>
+#include <shlobj.h>
+#include <windows.h>
 
 #include "../../FileSystemUtils.hpp"
 
@@ -29,7 +29,9 @@ static std::optional<std::wstring> getOverrideConfigurationDirectory()
 
     return buffer;
 }
+
 namespace Core::Utils {
+
 /**
  * Find the root configuration directory on Linux systems
  *
