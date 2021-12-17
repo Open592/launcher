@@ -32,7 +32,6 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
     )
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     add_compile_options(
-        "/Wall"
         "/permissive"
         "$<$<CONFIG:DEBUG>:/Z7>"
         "$<$<CONFIG:RELEASE>:/Ox>"
